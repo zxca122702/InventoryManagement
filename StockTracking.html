@@ -571,96 +571,160 @@
 
     <!-- Main Content -->
     <div class="col-lg-10 col-md-9 p-3">
-      <!-- Sales Channel Table -->
+      <!-- Total Stock Overview Panel -->
       <div class="inventory-card">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <h5><i class="bi bi-shop me-2"></i>Sales Channels</h5>
-          <small class="text-muted">Total Channels: <span id="totalItems">3</span></small>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h5><i class="bi bi-boxes me-2"></i>Total Stock Overview</h5>
+          <small class="text-muted">Last Updated: <span id="lastUpdated">2024-01-15 14:30:25</span></small>
         </div>
-        <div class="table-container">
-          <div class="table-responsive">
-            <table class="table table-hover" id="inventoryTable">
-              <thead>
-                <tr>
-                  <th><input type="checkbox" id="selectAll" onchange="toggleSelectAll()"></th>
-                  <th>Channel Code</th>
-                  <th>Channel Name</th>
-                  <th>ID</th>
-                  <th>Channel Type</th>
-                  <th>Commission Rate</th>
-                  <th>Monthly Revenue</th>
-                  <th>Region</th>
-                  <th>Category</th>
-                  <th>Status</th>
-                  <th>Manager</th>
-                  <th>Active Customers</th>
-                  <th>Updated At</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody id="inventoryTableBody">
-                <tr data-id="1">
-                  <td><input type="checkbox" class="item-checkbox" value="1"></td>
-                  <td>CHN001</td>
-                  <td>Online Store</td>
-                  <td>000001</td>
-                  <td>E-commerce</td>
-                  <td>5.5%</td>
-                  <td>₱125,000.00</td>
-                  <td>Philippines</td>
-                  <td>Retail</td>
-                  <td><span class="status-badge status-active">Active</span></td>
-                  <td>Maria Santos</td>
-                  <td>1,250</td>
-                  <td>2024-01-15</td>
-                  <td class="item-actions">
-                    <i class="bi bi-star" title="Favorite" onclick="toggleFavorite(1)"></i>
-                    <i class="bi bi-pencil" title="Edit" onclick="editItem(1)"></i>
-                    <i class="bi bi-trash" title="Delete" onclick="deleteItem(1)"></i>
-                  </td>
-                </tr>
-                <tr data-id="2">
-                  <td><input type="checkbox" class="item-checkbox" value="2"></td>
-                  <td>CHN002</td>
-                  <td>Retail Partners</td>
-                  <td>000002</td>
-                  <td>B2B</td>
-                  <td>8.0%</td>
-                  <td>₱89,500.00</td>
-                  <td>Philippines</td>
-                  <td>Wholesale</td>
-                  <td><span class="status-badge status-active">Active</span></td>
-                  <td>John Cruz</td>
-                  <td>85</td>
-                  <td>2024-01-14</td>
-                  <td class="item-actions">
-                    <i class="bi bi-star" title="Favorite" onclick="toggleFavorite(2)"></i>
-                    <i class="bi bi-pencil" title="Edit" onclick="editItem(2)"></i>
-                    <i class="bi bi-trash" title="Delete" onclick="deleteItem(2)"></i>
-                  </td>
-                </tr>
-                <tr data-id="3">
-                  <td><input type="checkbox" class="item-checkbox" value="3"></td>
-                  <td>CHN003</td>
-                  <td>Mobile App</td>
-                  <td>000003</td>
-                  <td>Mobile</td>
-                  <td>4.5%</td>
-                  <td>₱67,800.00</td>
-                  <td>Philippines</td>
-                  <td>Digital</td>
-                  <td><span class="status-badge status-inactive">Inactive</span></td>
-                  <td>Lisa Garcia</td>
-                  <td>420</td>
-                  <td>2024-01-13</td>
-                  <td class="item-actions">
-                    <i class="bi bi-star" title="Favorite" onclick="toggleFavorite(3)"></i>
-                    <i class="bi bi-pencil" title="Edit" onclick="editItem(3)"></i>
-                    <i class="bi bi-trash" title="Delete" onclick="deleteItem(3)"></i>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+        
+        <!-- Stock Summary Cards -->
+        <div class="row g-4 mb-4">
+          <div class="col-lg-3 col-md-6">
+            <div class="card border-0 shadow-sm">
+              <div class="card-body text-center">
+                <div class="d-flex align-items-center justify-content-center mb-3">
+                  <div class="rounded-circle bg-primary bg-opacity-10 p-3">
+                    <i class="bi bi-box-seam fs-4 text-primary"></i>
+                  </div>
+                </div>
+                <h3 class="fw-bold text-primary mb-1">2,847</h3>
+                <p class="text-muted mb-0">Total Items</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-lg-3 col-md-6">
+            <div class="card border-0 shadow-sm">
+              <div class="card-body text-center">
+                <div class="d-flex align-items-center justify-content-center mb-3">
+                  <div class="rounded-circle bg-success bg-opacity-10 p-3">
+                    <i class="bi bi-check-circle fs-4 text-success"></i>
+                  </div>
+                </div>
+                <h3 class="fw-bold text-success mb-1">1,923</h3>
+                <p class="text-muted mb-0">In Stock</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-lg-3 col-md-6">
+            <div class="card border-0 shadow-sm">
+              <div class="card-body text-center">
+                <div class="d-flex align-items-center justify-content-center mb-3">
+                  <div class="rounded-circle bg-warning bg-opacity-10 p-3">
+                    <i class="bi bi-exclamation-triangle fs-4 text-warning"></i>
+                  </div>
+                </div>
+                <h3 class="fw-bold text-warning mb-1">324</h3>
+                <p class="text-muted mb-0">Low Stock</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-lg-3 col-md-6">
+            <div class="card border-0 shadow-sm">
+              <div class="card-body text-center">
+                <div class="d-flex align-items-center justify-content-center mb-3">
+                  <div class="rounded-circle bg-danger bg-opacity-10 p-3">
+                    <i class="bi bi-x-circle fs-4 text-danger"></i>
+                  </div>
+                </div>
+                <h3 class="fw-bold text-danger mb-1">600</h3>
+                <p class="text-muted mb-0">Out of Stock</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stock by Category -->
+        <div class="row g-4">
+          <div class="col-lg-6">
+            <div class="card border-0 shadow-sm h-100">
+              <div class="card-header bg-transparent border-bottom">
+                <h6 class="mb-0"><i class="bi bi-pie-chart me-2"></i>Stock by Category</h6>
+              </div>
+              <div class="card-body">
+                <div class="mb-3">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="text-muted">Electronics</span>
+                    <span class="fw-bold">1,245 items</span>
+                  </div>
+                  <div class="progress" style="height: 8px;">
+                    <div class="progress-bar bg-primary" style="width: 44%"></div>
+                  </div>
+                </div>
+                
+                <div class="mb-3">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="text-muted">Accessories</span>
+                    <span class="fw-bold">892 items</span>
+                  </div>
+                  <div class="progress" style="height: 8px;">
+                    <div class="progress-bar bg-success" style="width: 31%"></div>
+                  </div>
+                </div>
+                
+                <div class="mb-3">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="text-muted">Components</span>
+                    <span class="fw-bold">456 items</span>
+                  </div>
+                  <div class="progress" style="height: 8px;">
+                    <div class="progress-bar bg-info" style="width: 16%"></div>
+                  </div>
+                </div>
+                
+                <div>
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="text-muted">Materials</span>
+                    <span class="fw-bold">254 items</span>
+                  </div>
+                  <div class="progress" style="height: 8px;">
+                    <div class="progress-bar bg-warning" style="width: 9%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-lg-6">
+            <div class="card border-0 shadow-sm h-100">
+              <div class="card-header bg-transparent border-bottom">
+                <h6 class="mb-0"><i class="bi bi-building me-2"></i>Stock by Warehouse</h6>
+              </div>
+              <div class="card-body">
+                <div class="mb-3">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="text-muted">Warehouse A (WH001)</span>
+                    <span class="fw-bold">1,567 items</span>
+                  </div>
+                  <div class="progress" style="height: 8px;">
+                    <div class="progress-bar bg-primary" style="width: 55%"></div>
+                  </div>
+                </div>
+                
+                <div class="mb-3">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="text-muted">Warehouse B (WH002)</span>
+                    <span class="fw-bold">823 items</span>
+                  </div>
+                  <div class="progress" style="height: 8px;">
+                    <div class="progress-bar bg-success" style="width: 29%"></div>
+                  </div>
+                </div>
+                
+                <div>
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="text-muted">Warehouse C (WH003)</span>
+                    <span class="fw-bold">457 items</span>
+                  </div>
+                  <div class="progress" style="height: 8px;">
+                    <div class="progress-bar bg-info" style="width: 16%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
