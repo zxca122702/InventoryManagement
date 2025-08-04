@@ -371,14 +371,14 @@
                 
                 if (data.connected) {
                     dbDot.className = 'db-dot connected';
-                    dbText.textContent = `Database: Connected to Neon (${data.database})`;
+                    dbText.textContent = `Database: ${data.database}`;
                 } else {
                     dbDot.className = 'db-dot error';
-                    dbText.textContent = 'Database: Connection Error';
+                    dbText.textContent = `${data.database}`;
                 }
             } catch (error) {
                 dbDot.className = 'db-dot error';
-                dbText.textContent = 'Database: Connection Error';
+                dbText.textContent = 'Local Authentication Only';
             }
         };
 

@@ -1,11 +1,13 @@
 const express = require('express');
 const session = require('express-session');
 const path = require('path');
-const { initializeDatabase, authenticateUser } = require('./database');
-require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Hardcoded admin credentials (no database needed)
+const ADMIN_USERNAME = 'admin';
+const ADMIN_PASSWORD = 'admin';
 
 // Middleware
 app.use(express.json());
@@ -14,7 +16,7 @@ app.use(express.static(path.join(__dirname)));
 
 // Session configuration
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'fallback-secret-key',
+  secret: 'fox-control-hub-secret-key',
   resave: false,
   saveUninitialized: false,
   cookie: {
@@ -52,15 +54,18 @@ app.get('/login.html', (req, res) => {
   }
 });
 
-// Login POST route
+// Login POST route (no database - hardcoded credentials)
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
   
   try {
-    const user = await authenticateUser(username, password);
-    
-    if (user) {
-      req.session.user = user;
+    // Simple hardcoded authentication
+    if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+      req.session.user = {
+        id: 1,
+        username: username,
+        role: 'admin'
+      };
       res.json({ success: true, message: 'Login successful' });
     } else {
       res.status(401).json({ success: false, message: 'Invalid username or password' });
@@ -118,44 +123,21 @@ app.get('/api/user', requireAuth, (req, res) => {
   });
 });
 
-// API route to check database connection status
+// API route for system status (no database)
 app.get('/api/db-status', async (req, res) => {
-  const { sql } = require('./database');
-  
-  try {
-    const result = await sql`SELECT current_database(), version()`;
-    
-    res.json({
-      connected: true,
-      database: result[0].current_database,
-      host: 'Neon PostgreSQL Serverless',
-      timestamp: new Date().toISOString()
-    });
-  } catch (error) {
-    console.error('Database status check failed:', error);
-    res.json({
-      connected: false,
-      error: 'Connection failed',
-      timestamp: new Date().toISOString()
-    });
-  }
+  res.json({
+    connected: false,
+    database: 'No database connection',
+    host: 'Local Authentication Only',
+    timestamp: new Date().toISOString()
+  });
 });
 
-// Initialize database and start server
-const startServer = async () => {
-  try {
-    await initializeDatabase();
-    
-    app.listen(PORT, () => {
-      console.log(`🚀 Fox Control Hub server running on http://localhost:${PORT}`);
-      console.log(`📝 Default login credentials:`);
-      console.log(`   Username: admin`);
-      console.log(`   Password: admin`);
-    });
-  } catch (error) {
-    console.error('Failed to start server:', error);
-    process.exit(1);
-  }
-};
-
-startServer();
+// Start server
+app.listen(PORT, () => {
+  console.log(`🚀 Fox Control Hub server running on http://localhost:${PORT}`);
+  console.log(`📝 Login credentials:`);
+  console.log(`   Username: ${ADMIN_USERNAME}`);
+  console.log(`   Password: ${ADMIN_PASSWORD}`);
+  console.log(`🔒 Authentication: Local hardcoded credentials (no database)`);
+});
