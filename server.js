@@ -120,17 +120,15 @@ app.get('/api/user', requireAuth, (req, res) => {
 
 // API route to check database connection status
 app.get('/api/db-status', async (req, res) => {
-  const { pool } = require('./database');
+  const { sql } = require('./database');
   
   try {
-    const client = await pool.connect();
-    const result = await client.query('SELECT current_database(), version()');
-    client.release();
+    const result = await sql`SELECT current_database(), version()`;
     
     res.json({
       connected: true,
-      database: result.rows[0].current_database,
-      host: 'Neon PostgreSQL',
+      database: result[0].current_database,
+      host: 'Neon PostgreSQL Serverless',
       timestamp: new Date().toISOString()
     });
   } catch (error) {

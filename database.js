@@ -1,22 +1,18 @@
-const { Pool } = require('pg');
+const { neon } = require('@neondatabase/serverless');
 require('dotenv').config();
 
-// Create a connection pool to Neon database
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
-});
+// Create Neon serverless connection
+const sql = neon(process.env.DATABASE_URL);
 
 // Test database connection
 const testConnection = async () => {
   try {
-    const client = await pool.connect();
+    const result = await sql`SELECT version()`;
     console.log('✅ Connected to Neon database successfully');
+    console.log(`Database version: ${result[0].version}`);
     
     // Create users table if it doesn't exist
-    await client.query(`
+    await sql`
       CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
         username VARCHAR(50) UNIQUE NOT NULL,
@@ -24,10 +20,9 @@ const testConnection = async () => {
         role VARCHAR(20) DEFAULT 'user',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
-    `);
+    `;
     
     console.log('✅ Users table created/verified');
-    client.release();
   } catch (err) {
     console.error('❌ Database connection error:', err);
   }
@@ -39,24 +34,21 @@ const initializeDatabase = async () => {
     await testConnection();
     
     // Check if admin user exists, if not create it
-    const client = await pool.connect();
-    const adminCheck = await client.query('SELECT * FROM users WHERE username = $1', ['admin']);
+    const adminCheck = await sql`SELECT * FROM users WHERE username = 'admin'`;
     
-    if (adminCheck.rows.length === 0) {
+    if (adminCheck.length === 0) {
       const bcrypt = require('bcryptjs');
       const hashedPassword = await bcrypt.hash('admin', 10);
       
-      await client.query(
-        'INSERT INTO users (username, password, role) VALUES ($1, $2, $3)',
-        ['admin', hashedPassword, 'admin']
-      );
+      await sql`
+        INSERT INTO users (username, password, role) 
+        VALUES ('admin', ${hashedPassword}, 'admin')
+      `;
       
       console.log('✅ Default admin user created (username: admin, password: admin)');
     } else {
       console.log('✅ Admin user already exists');
     }
-    
-    client.release();
   } catch (err) {
     console.error('❌ Database initialization error:', err);
   }
@@ -65,15 +57,13 @@ const initializeDatabase = async () => {
 // User authentication functions
 const authenticateUser = async (username, password) => {
   try {
-    const client = await pool.connect();
-    const result = await client.query('SELECT * FROM users WHERE username = $1', [username]);
-    client.release();
+    const result = await sql`SELECT * FROM users WHERE username = ${username}`;
     
-    if (result.rows.length === 0) {
+    if (result.length === 0) {
       return null;
     }
     
-    const user = result.rows[0];
+    const user = result[0];
     const bcrypt = require('bcryptjs');
     const isValidPassword = await bcrypt.compare(password, user.password);
     
@@ -93,7 +83,7 @@ const authenticateUser = async (username, password) => {
 };
 
 module.exports = {
-  pool,
+  sql,
   testConnection,
   initializeDatabase,
   authenticateUser
