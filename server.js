@@ -118,6 +118,31 @@ app.get('/api/user', requireAuth, (req, res) => {
   });
 });
 
+// API route to check database connection status
+app.get('/api/db-status', async (req, res) => {
+  const { pool } = require('./database');
+  
+  try {
+    const client = await pool.connect();
+    const result = await client.query('SELECT current_database(), version()');
+    client.release();
+    
+    res.json({
+      connected: true,
+      database: result.rows[0].current_database,
+      host: 'Neon PostgreSQL',
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('Database status check failed:', error);
+    res.json({
+      connected: false,
+      error: 'Connection failed',
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
 // Initialize database and start server
 const startServer = async () => {
   try {

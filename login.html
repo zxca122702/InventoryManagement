@@ -81,6 +81,50 @@
             font-weight: 300;
         }
 
+        .db-status {
+            margin-top: 20px;
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .db-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .db-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #ffa500;
+            animation: pulse 2s infinite;
+        }
+
+        .db-dot.connected {
+            background: #27ae60;
+            animation: none;
+        }
+
+        .db-dot.error {
+            background: #e74c3c;
+            animation: none;
+        }
+
+        .db-text {
+            font-size: 14px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
         .login-container {
             position: absolute;
             right: 15%;
@@ -232,6 +276,12 @@
             </div>
             <div class="welcome-text">Welcome to Fox<br>Control Hub!</div>
             <div class="subtitle">Inventory Management System</div>
+            <div class="db-status" id="dbStatus">
+                <div class="db-indicator">
+                    <span class="db-dot"></span>
+                    <span class="db-text">Database: Connecting...</span>
+                </div>
+            </div>
         </div>
 
         <div class="login-container">
@@ -309,6 +359,31 @@
 
         // Auto-focus username field
         document.getElementById('username').focus();
+
+        // Check database connection status
+        const checkDatabaseStatus = async () => {
+            const dbDot = document.querySelector('.db-dot');
+            const dbText = document.querySelector('.db-text');
+            
+            try {
+                const response = await fetch('/api/db-status');
+                const data = await response.json();
+                
+                if (data.connected) {
+                    dbDot.className = 'db-dot connected';
+                    dbText.textContent = `Database: Connected to Neon (${data.database})`;
+                } else {
+                    dbDot.className = 'db-dot error';
+                    dbText.textContent = 'Database: Connection Error';
+                }
+            } catch (error) {
+                dbDot.className = 'db-dot error';
+                dbText.textContent = 'Database: Connection Error';
+            }
+        };
+
+        // Check database status on page load
+        checkDatabaseStatus();
     </script>
 </body>
 </html>
